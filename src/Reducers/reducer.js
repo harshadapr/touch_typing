@@ -1,4 +1,4 @@
-import { START_TYPING, END_TYPING, HANDLE_KEY_PRESS } from './actions';
+import { START_TYPING, END_TYPING, HANDLE_KEY_PRESS } from '../Actions/actions';
 
 const initialState = {
     currentKey: '',

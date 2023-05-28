@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+
+
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { START_TYPING, END_TYPING, HANDLE_KEY_PRESS } from '../redux/actions';
+import { START_TYPING, END_TYPING, HANDLE_KEY_PRESS } from '../Actions/actions';
 
 const TouchTypingApp = ({
     currentKey,
-    typedKeys,
+    // typedKeys,
     accuracy,
     startTime,
     endTime,
@@ -14,7 +16,9 @@ const TouchTypingApp = ({
     endTyping,
     handleKeyPress,
 }) => {
+    const [typedKeys, setTypekeys] = useState("");
     const keyboardLayout = ['a', 's', 'd', 'f', 'j', 'k', 'l', ';'];
+    const [typingMessage, setTypingMessage] = useState('');
 
     const generateRandomString = () => {
         const length = 10;
@@ -30,6 +34,12 @@ const TouchTypingApp = ({
         const { key } = event;
         if (keyboardLayout.includes(key)) {
             handleKeyPress({ currentKey: key, typedKeys: typedKeys + key });
+        } else {
+            // Show the message for wrong key pressed
+            setTypingMessage('Wrong key pressed!');
+            setTimeout(() => {
+                setTypingMessage('');
+            }, 1000); // Adjust the duration (in milliseconds) as desired
         }
     };
 
@@ -53,11 +63,22 @@ const TouchTypingApp = ({
     const startTypingWithDispatch = () => {
         startTyping({
             currentKey: keyboardLayout[0],
-            randomString: generateRandomString()
+            randomString: generateRandomString(),
         });
     };
 
     const endTypingWithDispatch = () => {
+        const isCorrect = typedKeys === randomString;
+        if (isCorrect) {
+            setTypingMessage('Correct string is typed!');
+        } else {
+            setTypingMessage('The typed string is not correct.');
+        }
+
+        setTimeout(() => {
+            setTypingMessage('');
+        }, 3000); // Adjust the duration (in milliseconds) as desired
+
         endTyping({
             accuracy: calculateAccuracy(),
             typingSpeed: calculateTypingSpeed(),
@@ -84,27 +105,28 @@ const TouchTypingApp = ({
                     ))}
                 </div>
             </div>
-            <div>
+            <button onClick={startTypingWithDispatch}>Start Typing</button>
 
+            <div>
                 <h2>Random String</h2>
                 <div className="typing-area-container">
-
                     <div className="typing-area" contentEditable="true">
                         {randomString}
                     </div>
                 </div>
                 <h2>Typing Area</h2>
                 <div className="typing-area-container">
-                    <div className="typing-area" contentEditable="true">
+                    {/* <div className="typing-area" contentEditable="true">
                         {typedKeys}
-                    </div>
+                    </div> */}
+                    <input className="typing-area" type="text" onChange={(e) => {
+                        setTypekeys(e.target.value);
+                    }} />
+
                 </div>
-
-                {/* <p>Random String: {randomString}</p> */}
-
             </div>
+            <div className="typing-message">{typingMessage}</div>
             <div>
-                <button onClick={startTypingWithDispatch}>Start Typing</button>
                 <button onClick={endTypingWithDispatch}>End Typing</button>
             </div>
             <div className="performance-metrics">
@@ -112,13 +134,14 @@ const TouchTypingApp = ({
                 <p className="accuracy">Accuracy: {accuracy.toFixed(2)}%</p>
                 <p className="typing-speed">Typing Speed: {typingSpeed.toFixed(2)} characters per second</p>
             </div>
+
         </div>
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     currentKey: state.currentKey,
-    typedKeys: state.typedKeys,
+    // typedKeys: state.typedKeys,
     accuracy: state.accuracy,
     startTime: state.startTime,
     endTime: state.endTime,
@@ -126,10 +149,12 @@ const mapStateToProps = state => ({
     randomString: state.randomString,
 });
 
-const mapDispatchToProps = dispatch => ({
-    startTyping: payload => dispatch({ type: START_TYPING, payload }),
-    endTyping: payload => dispatch({ type: END_TYPING, payload }),
-    handleKeyPress: payload => dispatch({ type: HANDLE_KEY_PRESS, payload }),
+
+
+const mapDispatchToProps = (dispatch) => ({
+    startTyping: (payload) => dispatch({ type: START_TYPING, payload }),
+    endTyping: (payload) => dispatch({ type: END_TYPING, payload }),
+    handleKeyPress: (payload) => dispatch({ type: HANDLE_KEY_PRESS, payload }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TouchTypingApp);
