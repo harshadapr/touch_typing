@@ -95,7 +95,7 @@ const TouchTypingApp = ({
 
     return (
         <div>
-            <h1>Touch Typing Practice</h1>
+            <h1>Typing Tutor</h1>
             <div>
                 <h2>Keyboard Layout</h2>
                 <div className="keyboard">
