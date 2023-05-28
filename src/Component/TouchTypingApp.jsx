@@ -39,7 +39,7 @@ const TouchTypingApp = ({
             setTypingMessage('Wrong key pressed!');
             setTimeout(() => {
                 setTypingMessage('');
-            }, 1000); // Adjust the duration (in milliseconds) as desired
+            }, 1000);
         }
     };
 
@@ -77,7 +77,7 @@ const TouchTypingApp = ({
 
         setTimeout(() => {
             setTypingMessage('');
-        }, 3000); // Adjust the duration (in milliseconds) as desired
+        }, 3000);
 
         endTyping({
             accuracy: calculateAccuracy(),
