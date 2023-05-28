@@ -61,6 +61,7 @@ const TouchTypingApp = ({
     };
 
     const startTypingWithDispatch = () => {
+        setTypekeys("");
         startTyping({
             currentKey: keyboardLayout[0],
             randomString: generateRandomString(),
@@ -119,7 +120,7 @@ const TouchTypingApp = ({
                     {/* <div className="typing-area" contentEditable="true">
                         {typedKeys}
                     </div> */}
-                    <input className="typing-area" type="text" onChange={(e) => {
+                    <input value={typedKeys} className="typing-area" type="text" onChange={(e) => {
                         setTypekeys(e.target.value);
                     }} />
 
